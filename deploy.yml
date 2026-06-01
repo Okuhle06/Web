@@ -1,0 +1,24 @@
+name: Deploy website
+on:
+  push:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check code
+      uses: actions checkout@v4
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v1.0.3
+
+      with: 
+        host: 51.21.223.139
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY}}
+
+        script: |
+          cd ~/web
+          git pull origin master
+          sudo cp ~/web/index.html /var/www/html/index.html
